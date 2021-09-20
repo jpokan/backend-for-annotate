@@ -1,7 +1,7 @@
 const { getDatabase } = require('./notion')
 const express = require('express')
 const app = express()
-const port = process.envPORT || 8009
+const port = process.env.PORT || 8009
 
 app.get('/getDatabase', async (req, res) => {
 	const response = await getDatabase()
