@@ -5,7 +5,7 @@ const MongoStore = require('connect-mongo')
 const port = process.env.PORT || 5000
 
 const store = MongoStore.create({
-	mongoUrl: 'mongodb://localhost:27017',
+	mongoUrl: process.env.MONGODB_URI,
 	dbName: 'app_annotate',
 	collectionName: 'sessions',
 	touchAfter: 24 * 3600 // Modify after this amount of time has passed
