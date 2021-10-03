@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Annotate + Notion</title>
+</head>
+<style>
+	code {
+		background-color: lightgray;
+		padding: 3px;
+		border-radius: 3px;
+	}
+</style>
+<body>
+	<h1>Annotate + Notion Integration Server</h1>
+	<description>
+		<p>This is a server that handles frontend calls from "Annotate App" at http://localhost:3000</p>
+		<p>It is a Node + Express App deployed on Heroku</p>
+		<li>App Name: "notion-server-jpokan"</li>
+		<p>Run <code>heroku local web</code> for testing before deployment</p>
+		<code>https://git.heroku.com/notion-server-jpokan.git</code>
+	</description>
+
+	<h3>Server Routes</h3>
+
+	<p>Public integration endpoint</p>
+	<li>
+		<a href="/auth/notion">/auth/notion</a>
+	</li>
+	<p>Private integration endpoint</p>
+	<p>Access token comes from <code>.env</code> file</p>
+	<li>
+		<a href="/api/queryDatabase">/api/queryDatabase</a>
+	</li>
+</body>
+</html>

@@ -1,18 +1,27 @@
 {
- "name": "notion",
+ "name": "annotate-private-integration",
  "version": "1.0.0",
  "main": "index.js",
  "author": "Jorge Ou",
  "license": "MIT",
  "scripts": {
+  "dev": "nodemon ./index.js",
   "start": "node index.js"
  },
  "dependencies": {
-  "@notionhq/client": "^0.3.2",
+  "@notionhq/client": "^0.4.0",
+  "axios": "^0.22.0",
+  "connect-mongo": "^4.6.0",
   "dotenv": "^10.0.0",
-  "express": "^4.17.1"
+  "express": "^4.17.1",
+  "express-session": "^1.17.2",
+  "mongodb": "^4.1.2",
+  "qs": "^6.10.1"
  },
  "engines": {
-	 "node": "14.17.6"
+  "node": "14.17.6"
+ },
+ "devDependencies": {
+  "nodemon": "^2.0.13"
  }
 }
