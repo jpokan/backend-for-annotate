@@ -18,6 +18,7 @@ const getAccessToken = (code) => {
 	const data = qs.stringify({
 		code: code,
 		grant_type: 'authorization_code'
+		// redirect_uri: 'https://notion-server-jpokan.herokuapp.com/auth/notion'
 	})
 
 	const config = {

@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb')
 // Connection URI
-const uri = process.env.MONGODB_URI
+const uri = process.env.MONGODB_URI || process.env.MONGODB_DEV_URI
 
 // Create a new MongoClient
 const client = new MongoClient(uri, {

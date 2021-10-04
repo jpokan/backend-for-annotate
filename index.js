@@ -5,7 +5,7 @@ const MongoStore = require('connect-mongo')
 const port = process.env.PORT || 5000
 
 const store = MongoStore.create({
-	mongoUrl: process.env.MONGODB_URI,
+	mongoUrl: process.env.MONGODB_URI || process.env.MONGODB_DEV_URI,
 	dbName: 'app_annotate',
 	collectionName: 'sessions',
 	touchAfter: 24 * 3600 // Modify after this amount of time has passed
@@ -16,7 +16,7 @@ app.use(
 	session({
 		secret: process.env.EXPRESS_SESSION_SECRET,
 		store: store,
-		cookie: { maxAge: 60 * 1000 }, // 60 seconds
+		cookie: { maxAge: 60 * 1000, sameSite: 'strict', httpOnly: true }, // 60 seconds
 		saveUninitialized: true,
 		resave: false
 	})
