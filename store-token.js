@@ -18,14 +18,16 @@ const storeToken = async (data) => {
 
 		// Check if integration exists
 		if (token) {
-			console.log(`Current token exists ${token._id}`)
+			console.log(`Current token exists: ${token._id}`)
 		} else {
 			// Save to database
 			const doc = {
 				_id: data.bot_id,
 				...data
 			}
-			await notion_tokens.insertOne(doc)
+			await notion_tokens
+				.insertOne(doc)
+				.then(console.log(`New token was created: ${data.bot_id}`))
 		}
 	} finally {
 		// Ensures that the client will close when you finish/error

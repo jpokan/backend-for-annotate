@@ -2,8 +2,10 @@ require('dotenv').config()
 const app = require('express')()
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
+
 const port = process.env.PORT || 5000
 
+// Initiate MongoDB connection with connect-mongo
 const store = MongoStore.create({
 	mongoUrl: process.env.MONGODB_URI || process.env.MONGODB_DEV_URI,
 	dbName: 'app_annotate',
@@ -14,16 +16,22 @@ const store = MongoStore.create({
 // Sessions Configuration
 app.use(
 	session({
+		name: 'annotate.sid',
 		secret: process.env.EXPRESS_SESSION_SECRET,
 		store: store,
-		cookie: { maxAge: 60 * 1000, sameSite: 'strict', httpOnly: true }, // 60 seconds
-		saveUninitialized: true,
+		cookie: {
+			maxAge: 24 * 60 * 60 * 1000, // 24 hours
+			sameSite: 'strict',
+			httpOnly: true
+			// secure: true // Set to true for production
+		},
+		saveUninitialized: false,
 		resave: false
 	})
 )
 
 app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/static/index.html')
+	res.sendFile(`${__dirname}/static/index.html`)
 })
 
 /**
@@ -34,6 +42,7 @@ const queryDatabase = require('./notion')
 
 app.get('/api/queryDatabase', async (req, res) => {
 	res.set('Access-Control-Allow-Origin', 'http://localhost:3000')
+	res.set('Access-Control-Allow-Credentials', true)
 	try {
 		const response = await queryDatabase()
 		res.json(response)
@@ -51,15 +60,35 @@ const storeToken = require('./store-token')
 
 app.get('/auth/notion', async (req, res) => {
 	try {
+		const sid = req.query.state
 		const code = req.query.code
 		const result = await getAccessToken(code)
 		if (result) {
+			// Delete stored session if it exists
+			store.destroy(sid)
+			// Creates new session
+			req.session.token = result.access_token
 			storeToken(result).catch(console.dir)
 		}
-		res.redirect('http://localhost:3000/dashboard')
+		res.redirect('http://localhost:3000/')
 	} catch (err) {
 		console.error(err)
 		res.redirect('http://localhost:3000/')
+	}
+})
+
+app.get('/api/public/queryDatabase', async (req, res) => {
+	res.set('Access-Control-Allow-Origin', 'http://localhost:3000')
+	res.set('Access-Control-Allow-Credentials', true)
+	if (req.session.token) {
+		// Use token to get data from Notion API
+		const response = {
+			id: req.sessionID
+		}
+
+		res.json(response)
+	} else {
+		res.status(403).json({})
 	}
 })
 

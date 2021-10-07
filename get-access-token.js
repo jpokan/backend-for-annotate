@@ -35,16 +35,11 @@ const getAccessToken = (code) => {
 	let result = axios(config)
 		.then(function (response) {
 			// Retrieved Access Token Succesfully
+			console.log('Access Token retrieved successfully.')
 			return response.data
 		})
 		.catch(function (error) {
-			// Couldn't get Access Token
-			console.log("Couldn't get Access Token")
-			throw {
-				...error.response.data,
-				error_message: error.message,
-				status: error.response.status
-			}
+			throw "Couldn't exchange Access Token."
 		})
 
 	return result
