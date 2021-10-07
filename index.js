@@ -14,12 +14,12 @@ const store = MongoStore.create({
 })
 
 let appURL = 'http://localhost:3000'
-let appDomain
+// let appDomain
 
-if (process.env.MONGODB_URI) {
-	appURL = ['https://n-annotate.netlify.app', 'http://localhost:3000']
-	appDomain = 'n-annotate.neltify.app'
-}
+// if (process.env.MONGODB_URI) {
+// 	appURL = ['https://n-annotate.netlify.app']
+// 	appDomain = 'n-annotate.neltify.app'
+// }
 // Sessions Configuration
 app.use(
 	session({
@@ -27,7 +27,7 @@ app.use(
 		secret: process.env.EXPRESS_SESSION_SECRET,
 		store: store,
 		path: '/',
-		domain: appDomain,
+		// domain: appDomain,
 		cookie: {
 			maxAge: 24 * 60 * 60 * 1000, // 24 hours
 			sameSite: 'strict',
