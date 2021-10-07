@@ -13,6 +13,10 @@ const store = MongoStore.create({
 	touchAfter: 24 * 3600 // Modify after this amount of time has passed
 })
 
+let appURL = 'https://n-annotate.netlify.app/'
+if (process.env.MONGODB_DEV_URI) {
+	appURL = 'http://localhost:3000/'
+}
 // Sessions Configuration
 app.use(
 	session({
@@ -41,7 +45,7 @@ app.get('/', (req, res) => {
 const queryDatabase = require('./notion')
 
 app.get('/api/queryDatabase', async (req, res) => {
-	res.set('Access-Control-Allow-Origin', 'http://localhost:3000')
+	res.set('Access-Control-Allow-Origin', appURL)
 	res.set('Access-Control-Allow-Credentials', true)
 	try {
 		const response = await queryDatabase()
@@ -70,15 +74,15 @@ app.get('/auth/notion', async (req, res) => {
 			req.session.token = result.access_token
 			storeToken(result).catch(console.dir)
 		}
-		res.redirect('http://localhost:3000/')
+		res.redirect(appURL)
 	} catch (err) {
 		console.error(err)
-		res.redirect('http://localhost:3000/')
+		res.redirect(appURL)
 	}
 })
 
 app.get('/api/public/queryDatabase', async (req, res) => {
-	res.set('Access-Control-Allow-Origin', 'http://localhost:3000')
+	res.set('Access-Control-Allow-Origin', appURL)
 	res.set('Access-Control-Allow-Credentials', true)
 	if (req.session.token) {
 		// Use token to get data from Notion API
