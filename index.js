@@ -26,12 +26,13 @@ app.use(
 		name: 'annotate.sid',
 		secret: process.env.EXPRESS_SESSION_SECRET,
 		store: store,
+		path: '/',
 		domain: appDomain,
 		cookie: {
 			maxAge: 24 * 60 * 60 * 1000, // 24 hours
 			sameSite: 'strict',
-			httpOnly: true
-			// secure: true // Set to true for production
+			httpOnly: true,
+			secure: true // Set to true for production
 		},
 		saveUninitialized: false,
 		resave: false
