@@ -15,9 +15,14 @@ const store = MongoStore.create({
 
 let appURL = 'http://localhost:3000'
 // let appDomain
+// if (app.get('env') === 'production') {
+//   app.set('trust proxy', 1) // trust first proxy
+//   sess.cookie.secure = true // serve secure cookies
+// }\
+console.log(app.get('env'))
 
 if (process.env.MONGODB_URI) {
-	appURL = ['https://n-annotate.netlify.app']
+	appURL = 'https://n-annotate.netlify.app'
 	appDomain = 'n-annotate.neltify.app'
 }
 // Sessions Configuration
@@ -31,8 +36,8 @@ app.use(
 		cookie: {
 			maxAge: 24 * 60 * 60 * 1000, // 24 hours
 			sameSite: 'none',
-			httpOnly: true,
-			secure: true // Set to true for production
+			httpOnly: true
+			// secure: true // Set to true for production
 		},
 		saveUninitialized: false,
 		resave: false
