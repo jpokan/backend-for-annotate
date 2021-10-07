@@ -13,9 +13,12 @@ const store = MongoStore.create({
 	touchAfter: 24 * 3600 // Modify after this amount of time has passed
 })
 
-let appURL = 'https://n-annotate.netlify.app/'
-if (process.env.MONGODB_DEV_URI) {
-	appURL = 'http://localhost:3000/'
+let appURL = 'http://localhost:3000'
+let appDomain
+
+if (process.env.MONGODB_URI) {
+	appURL = 'https://n-annotate.netlify.app'
+	appDomain = 'n-annotate.neltify.app'
 }
 // Sessions Configuration
 app.use(
@@ -23,11 +26,12 @@ app.use(
 		name: 'annotate.sid',
 		secret: process.env.EXPRESS_SESSION_SECRET,
 		store: store,
+		domain: appDomain,
 		cookie: {
 			maxAge: 24 * 60 * 60 * 1000, // 24 hours
-			sameSite: 'lax',
-			httpOnly: true,
-			secure: true // Set to true for production
+			sameSite: 'strict',
+			httpOnly: true
+			// secure: true // Set to true for production
 		},
 		saveUninitialized: false,
 		resave: false
