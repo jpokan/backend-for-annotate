@@ -16,10 +16,10 @@ const store = MongoStore.create({
 let appURL = 'http://localhost:3000'
 // let appDomain
 
-// if (process.env.MONGODB_URI) {
-// 	appURL = ['https://n-annotate.netlify.app']
-// 	appDomain = 'n-annotate.neltify.app'
-// }
+if (process.env.MONGODB_URI) {
+	appURL = ['https://n-annotate.netlify.app']
+	appDomain = 'n-annotate.neltify.app'
+}
 // Sessions Configuration
 app.use(
 	session({
