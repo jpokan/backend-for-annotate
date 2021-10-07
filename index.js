@@ -30,9 +30,9 @@ app.use(
 		// domain: appDomain,
 		cookie: {
 			maxAge: 24 * 60 * 60 * 1000, // 24 hours
-			// sameSite: 'strict',
-			httpOnly: true
-			// secure: true // Set to true for production
+			sameSite: 'none',
+			httpOnly: true,
+			secure: true // Set to true for production
 		},
 		saveUninitialized: false,
 		resave: false
