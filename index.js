@@ -13,36 +13,29 @@ const store = MongoStore.create({
 	touchAfter: 24 * 3600 // Modify after this amount of time has passed
 })
 
-let appURL = 'http://localhost:3000'
-// let appDomain
-// if (app.get('env') === 'production') {
-//   app.set('trust proxy', 1) // trust first proxy
-//   sess.cookie.secure = true // serve secure cookies
-// }\
-console.log(app.get('env'))
-
-if (process.env.MONGODB_URI) {
-	appURL = 'https://n-annotate.netlify.app'
-	appDomain = 'n-annotate.neltify.app'
+const sessionOptions = {
+	name: 'annotate.sid',
+	secret: process.env.EXPRESS_SESSION_SECRET,
+	store: store,
+	cookie: {
+		maxAge: 60 * 1000, // 24 hours
+		sameSite: false
+		// secure: true
+	},
+	saveUninitialized: false,
+	resave: false
 }
+
+let appURL = 'http://localhost:3000'
+
+if (app.get('env') === 'production') {
+	app.set('trust proxy', 1) // trust first proxy
+	sessionOptions.cookie.secure = true // serve secure cookies
+	appURL = 'https://n-annotate.netlify.app'
+}
+
 // Sessions Configuration
-app.use(
-	session({
-		name: 'annotate.sid',
-		secret: process.env.EXPRESS_SESSION_SECRET,
-		store: store,
-		path: '/',
-		// domain: appDomain,
-		cookie: {
-			maxAge: 24 * 60 * 60 * 1000, // 24 hours
-			sameSite: 'none',
-			httpOnly: true
-			// secure: true // Set to true for production
-		},
-		saveUninitialized: false,
-		resave: false
-	})
-)
+app.use(session(sessionOptions))
 
 app.get('/', (req, res) => {
 	res.sendFile(`${__dirname}/static/index.html`)
@@ -82,6 +75,8 @@ app.get('/auth/notion', async (req, res) => {
 			store.destroy(sid)
 			// Creates new session
 			req.session.token = result.access_token
+
+			console.log(req.session)
 			storeToken(result).catch(console.dir)
 		}
 		res.redirect(appURL)
@@ -92,6 +87,7 @@ app.get('/auth/notion', async (req, res) => {
 })
 
 app.get('/api/public/queryDatabase', async (req, res) => {
+	console.log(req.sessionID)
 	res.set('Access-Control-Allow-Origin', appURL)
 	res.set('Access-Control-Allow-Credentials', true)
 	if (req.session.token) {
