@@ -13,7 +13,7 @@ const store = MongoStore.create({
 	touchAfter: 24 * 3600 // Modify after this amount of time has passed
 })
 
-let appURL = 'http://localhost:3000/'
+let appURL = 'http://localhost:3000'
 // let appDomain
 
 // if (process.env.MONGODB_URI) {
