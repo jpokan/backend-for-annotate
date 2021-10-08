@@ -19,9 +19,7 @@ const sessionOptions = {
 	store: store,
 	cookie: {
 		maxAge: 60 * 1000, // 24 hours
-		sameSite: 'none',
 		httpOnly: true
-		// secure: true
 	},
 	saveUninitialized: false,
 	resave: false
@@ -30,8 +28,9 @@ const sessionOptions = {
 let appURL = 'http://localhost:3000'
 
 if (app.get('env') === 'production') {
-	app.set('trust proxy', 1) // trust first proxy
-	sessionOptions.cookie.secure = true // serve secure cookies
+	// app.set('trust proxy', 1) // trust first proxy
+	sessionOptions.cookie.sameSite = 'none'
+	sessionOptions.cookie.secure = true
 	appURL = 'https://n-annotate.netlify.app'
 }
 
@@ -74,10 +73,8 @@ app.get('/auth/notion', async (req, res) => {
 		if (result) {
 			// Delete stored session if it exists
 			store.destroy(sid)
-			// Creates new session
+			// Creates new session and store access token into 'notion_tokens' collection
 			req.session.token = result.access_token
-
-			console.log(req.session)
 			storeToken(result).catch(console.dir)
 		}
 		res.redirect(appURL)
@@ -88,8 +85,6 @@ app.get('/auth/notion', async (req, res) => {
 })
 
 app.get('/api/public/queryDatabase', async (req, res) => {
-	console.log(req.sessionID)
-	console.log(req.headers)
 	res.set('Access-Control-Allow-Origin', appURL)
 	res.set('Access-Control-Allow-Credentials', true)
 	res.set('Access-Control-Allow-Headers', 'X-Custom-Header')
@@ -98,15 +93,16 @@ app.get('/api/public/queryDatabase', async (req, res) => {
 	if (req.session.token) {
 		// Use token to get data from Notion API
 		const response = {
-			id: req.sessionID
+			id: req.sessionID,
+			online: true
 		}
-		console.log('session was accepted')
 		res.json(response)
 		// else the session is not available and does not have any data
 	} else {
-		console.log('no session matched')
 		res.status(403).json({
-			id: req.sessionID
+			id: req.sessionID,
+			online: false,
+			error_message: 'Not Authorized'
 		})
 	}
 })
