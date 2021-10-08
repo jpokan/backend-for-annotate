@@ -19,7 +19,8 @@ const sessionOptions = {
 	store: store,
 	cookie: {
 		maxAge: 60 * 1000, // 24 hours
-		sameSite: 'none'
+		sameSite: 'none',
+		httpOnly: true
 		// secure: true
 	},
 	saveUninitialized: false,
