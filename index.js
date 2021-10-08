@@ -22,16 +22,16 @@ const sessionOptions = {
 		httpOnly: true
 	},
 	saveUninitialized: false,
-	resave: false
+	resave: true
 }
 
-let appURL = 'http://localhost:3000'
+let frontendURL = 'http://localhost:3000'
 
 if (app.get('env') === 'production') {
 	app.set('trust proxy', 1) // trust first proxy is IMPORTANT!
-	sessionOptions.cookie.sameSite = 'lax'
+	sessionOptions.cookie.sameSite = 'none'
 	sessionOptions.cookie.secure = true
-	appURL = 'https://n-annotate.netlify.app'
+	frontendURL = 'https://n-annotate.netlify.app'
 }
 
 // Sessions Configuration
@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
 const queryDatabase = require('./notion')
 
 app.get('/api/queryDatabase', async (req, res) => {
-	res.set('Access-Control-Allow-Origin', appURL)
+	res.set('Access-Control-Allow-Origin', frontendURL)
 	res.set('Access-Control-Allow-Credentials', true)
 	try {
 		const response = await queryDatabase()
@@ -77,15 +77,15 @@ app.get('/auth/notion', async (req, res) => {
 			req.session.token = result.access_token
 			storeToken(result).catch(console.dir)
 		}
-		res.redirect(appURL)
+		res.redirect(frontendURL)
 	} catch (err) {
 		console.error(err)
-		res.redirect(appURL)
+		res.redirect(frontendURL)
 	}
 })
 
 app.get('/api/public/queryDatabase', async (req, res) => {
-	res.set('Access-Control-Allow-Origin', appURL)
+	res.set('Access-Control-Allow-Origin', frontendURL)
 	res.set('Access-Control-Allow-Credentials', true)
 	res.set('Access-Control-Allow-Headers', 'X-Custom-Header')
 	// if session with access token exist
