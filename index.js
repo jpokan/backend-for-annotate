@@ -30,7 +30,7 @@ const sessionOptions = {
 let appURL = 'http://localhost:3000'
 
 if (app.get('env') === 'production') {
-	// app.set('trust proxy', 1) // trust first proxy
+	app.set('trust proxy', 1) // trust first proxy
 	sessionOptions.cookie.secure = true // serve secure cookies
 	appURL = 'https://n-annotate.netlify.app'
 }
@@ -105,7 +105,7 @@ app.get('/api/public/queryDatabase', async (req, res) => {
 	} else {
 		console.log('no session matched')
 		res.status(403).json({
-			sid: req.sessionID
+			id: req.sessionID
 		})
 	}
 })
