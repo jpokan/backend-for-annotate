@@ -28,7 +28,7 @@ const sessionOptions = {
 let appURL = 'http://localhost:3000'
 
 if (app.get('env') === 'production') {
-	// app.set('trust proxy', 1) // trust first proxy
+	app.set('trust proxy', 1) // trust first proxy
 	sessionOptions.cookie.sameSite = 'none'
 	sessionOptions.cookie.secure = true
 	appURL = 'https://n-annotate.netlify.app'
