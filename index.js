@@ -92,7 +92,7 @@ app.get('/auth/notion', async (req, res) => {
 app.get('/api/public/queryDatabase', async (req, res) => {
 	res.set('Access-Control-Allow-Origin', frontendURL)
 	res.set('Access-Control-Allow-Credentials', true)
-	res.set('Access-Control-Allow-Headers')
+	res.set('Access-Control-Allow-Headers', 'Accept')
 	// if session with access token exist
 	// it is an authenticated user
 	if (req.session.token) {
