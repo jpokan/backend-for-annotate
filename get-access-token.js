@@ -11,10 +11,10 @@ const qs = require('qs')
  * Header format reference: Authorization: Basic {client_id}:{client_secret}
  */
 
-const getAccessToken = (code, environment) => {
+const getAccessToken = (code) => {
 	let credential = `${process.env.DEV_OAUTH_CLIENT_ID}:${process.env.DEV_OAUTH_CLIENT_SECRET}`
 
-	if (environment === 'production') {
+	if (process.env.NODE_ENV === 'production') {
 		credential = `${process.env.PROD_OAUTH_CLIENT_ID}:${process.env.PROD_OAUTH_CLIENT_SECRET}`
 	}
 	const encodedCredential = Buffer.from(credential).toString('base64')

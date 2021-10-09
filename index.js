@@ -29,10 +29,11 @@ app.use(session(sessionOptions))
 let frontendURL = 'http://localhost:3000'
 
 const environment = app.get('env')
-console.log('Current environment is: ' + environment)
+
+console.log('Current environment is: ' + process.env.NODE_ENV)
 
 // PRODUCTION SETTINGS
-if (environment === 'production') {
+if (process.env.NODE_ENV === 'production') {
 	// trust first proxy is IMPORTANT
 	app.set('trust proxy', 1)
 	// Cookies in production are sent with these options
@@ -74,7 +75,7 @@ app.get('/auth/notion', async (req, res) => {
 	try {
 		const sid = req.query.state
 		const code = req.query.code
-		const result = await getAccessToken(code, environment)
+		const result = await getAccessToken(code)
 		if (result) {
 			// Delete stored session if it exists
 			store.destroy(sid)
