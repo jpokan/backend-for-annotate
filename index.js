@@ -2,7 +2,6 @@ require('dotenv').config()
 const app = require('express')()
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
-
 const port = process.env.PORT || 5000
 
 // Initiate MongoDB connection with connect-mongo
@@ -13,29 +12,35 @@ const store = MongoStore.create({
 	touchAfter: 24 * 3600 // Modify after this amount of time has passed
 })
 
+// Sessions Configuration
 const sessionOptions = {
 	name: 'annotate.sid',
 	secret: process.env.EXPRESS_SESSION_SECRET,
 	store: store,
 	cookie: {
-		maxAge: 60 * 1000, // 24 hours
+		maxAge: 1 * 30 * 60 * 1000, // hours * minutes * seconds * ms
 		httpOnly: true
 	},
 	saveUninitialized: false,
 	resave: true
 }
+app.use(session(sessionOptions))
 
 let frontendURL = 'http://localhost:3000'
 
-if (app.get('env') === 'production') {
-	app.set('trust proxy', 1) // trust first proxy is IMPORTANT!
-	sessionOptions.cookie.sameSite = 'none'
-	sessionOptions.cookie.secure = true
+const environment = app.get('env')
+console.log('Current environment is: ' + environment)
+
+// PRODUCTION SETTINGS
+if (environment === 'production') {
+	// trust first proxy is IMPORTANT
+	app.set('trust proxy', 1)
+	// Cookies in production are sent with these options
+	sessionOptions.cookie.sameSite = 'none' // Because cookies are sent through different domains or sites
+	sessionOptions.cookie.secure = true // Because cookies should be sent with HTTPS
+
 	frontendURL = 'https://n-annotate.netlify.app'
 }
-
-// Sessions Configuration
-app.use(session(sessionOptions))
 
 app.get('/', (req, res) => {
 	res.sendFile(`${__dirname}/static/index.html`)
@@ -69,7 +74,7 @@ app.get('/auth/notion', async (req, res) => {
 	try {
 		const sid = req.query.state
 		const code = req.query.code
-		const result = await getAccessToken(code)
+		const result = await getAccessToken(code, environment)
 		if (result) {
 			// Delete stored session if it exists
 			store.destroy(sid)
@@ -87,7 +92,7 @@ app.get('/auth/notion', async (req, res) => {
 app.get('/api/public/queryDatabase', async (req, res) => {
 	res.set('Access-Control-Allow-Origin', frontendURL)
 	res.set('Access-Control-Allow-Credentials', true)
-	res.set('Access-Control-Allow-Headers', 'X-Custom-Header')
+	res.set('Access-Control-Allow-Headers')
 	// if session with access token exist
 	// it is an authenticated user
 	if (req.session.token) {
