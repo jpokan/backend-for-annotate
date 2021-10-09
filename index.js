@@ -18,6 +18,7 @@ const sessionOptions = {
 	secret: process.env.EXPRESS_SESSION_SECRET,
 	store: store,
 	cookie: {
+		path: '/auth',
 		maxAge: 1 * 30 * 60 * 1000, // hours * minutes * seconds * ms
 		httpOnly: true
 	},
@@ -27,8 +28,6 @@ const sessionOptions = {
 app.use(session(sessionOptions))
 
 let frontendURL = 'http://localhost:3000'
-
-const environment = app.get('env')
 
 console.log('Current environment is: ' + process.env.NODE_ENV)
 
