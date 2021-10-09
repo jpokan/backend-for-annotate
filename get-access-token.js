@@ -1,5 +1,6 @@
 const axios = require('axios')
 const qs = require('qs')
+const colors = require('colors')
 
 /**
  * Exchanging the grant for an access token
@@ -39,11 +40,13 @@ const getAccessToken = (code) => {
 	let result = axios(config)
 		.then(function (response) {
 			// Retrieved Access Token Succesfully
-			console.log('Access Token retrieved successfully.')
+			console.log(colors.green('[ getAccessToken ] ') + 'Access Token retrieved successfully.')
 			return response.data
 		})
 		.catch(function (error) {
-			throw "Couldn't exchange Access Token."
+			console.log(colors.red('[ getAccessToken ] ') + 'Access Token exchange denied by Notion.')
+			console.error(error.response.data)
+			throw error.response.data
 		})
 
 	return result
