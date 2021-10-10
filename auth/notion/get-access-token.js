@@ -39,7 +39,6 @@ const getAccessToken = (code) => {
 	// Send POST request with axios and return access token with some extra info
 	let result = axios(config)
 		.then(function (response) {
-			// Retrieved Access Token Succesfully
 			console.log(colors.green('[ getAccessToken ] ') + 'Access Token retrieved successfully.')
 			return response.data
 		})
