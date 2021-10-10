@@ -4,9 +4,9 @@ const getAccessToken = require('./get-access-token')
 /**
  * Notion Public Integration Routes
  */
-const frontendURL = process.env.FRONTEND_URL
+const frontendURL = process.env.FRONTEND_URL.toString()
 
-router.get('/', async (req, res) => {
+router.get('', async (req, res) => {
 	try {
 		const code = req.query.code
 		const result = await getAccessToken(code)
