@@ -1,5 +1,9 @@
-// require('dotenv').config()
 const app = require('express')()
+if (app.get('env') === 'development') {
+	require('dotenv').config()
+} else {
+	console.log('dotenv deactivated in production')
+}
 
 console.log('Starting server in: ' + app.get('env') + ' mode')
 
@@ -22,6 +26,7 @@ app.get('/', (req, res) => {
 
 // Notion Auth routes
 const notionAuth = require('./auth/notion/routes')
+const e = require('express')
 app.use('/auth/notion', notionAuth)
 
 const port = process.env.PORT || 5000
