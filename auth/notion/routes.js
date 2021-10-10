@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const getAccessToken = require('./get-access-token')
-const store = require('../../sessions/store')
 /**
  * Notion Public Integration Routes
  */
@@ -12,10 +11,8 @@ router.get('/', async (req, res) => {
 		const sid = req.query.state
 		const code = req.query.code
 		const result = await getAccessToken(code)
-
 		if (result) {
 			// Delete stored session if it exists
-			store.destroy(sid)
 			// Save results to session
 			req.session.token = result
 		}
@@ -29,6 +26,7 @@ router.get('/session', async (req, res) => {
 	res.set('Access-Control-Allow-Origin', frontendURL)
 	res.set('Access-Control-Allow-Credentials', true)
 	res.set('Access-Control-Allow-Headers', 'Accept')
+
 	// if session with access token exist
 	// it is an authenticated user
 	if (req.session.token) {
