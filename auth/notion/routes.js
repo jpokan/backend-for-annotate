@@ -8,7 +8,6 @@ const frontendURL = process.env.FRONTEND_URL
 
 router.get('/', async (req, res) => {
 	try {
-		const sid = req.query.state
 		const code = req.query.code
 		const result = await getAccessToken(code)
 		if (result) {
@@ -22,7 +21,7 @@ router.get('/', async (req, res) => {
 	}
 })
 
-router.get('/session', async (req, res) => {
+router.get('/session/status', async (req, res) => {
 	res.set('Access-Control-Allow-Origin', frontendURL)
 	res.set('Access-Control-Allow-Credentials', true)
 	res.set('Access-Control-Allow-Headers', 'Accept')
@@ -44,6 +43,21 @@ router.get('/session', async (req, res) => {
 			error_message: 'No connection to Notion has been set'
 		})
 	}
+})
+
+router.post('/session/disconnect', async (req, res) => {
+	res.set('Access-Control-Allow-Origin', frontendURL)
+	res.set('Access-Control-Allow-Credentials', true)
+	res.set('Access-Control-Allow-Headers', 'Accept')
+
+	req.session.cookie.maxAge = 1
+	req.session.touch()
+	const response = {
+		id: req.sessionID,
+		online: false
+	}
+	console.log('Session was terminated.')
+	res.json(response)
 })
 
 module.exports = router
