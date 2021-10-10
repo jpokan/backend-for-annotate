@@ -42,7 +42,7 @@ router.get('/session/status', async (req, res) => {
 		res.status(403).json({
 			id: req.sessionID,
 			online: false,
-			error_message: 'No connection to Notion has been set'
+			error_message: 'Not connected'
 		})
 	}
 })

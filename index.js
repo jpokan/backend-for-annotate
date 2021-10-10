@@ -1,4 +1,4 @@
-require('dotenv').config()
+// require('dotenv').config()
 const app = require('express')()
 
 console.log('Starting server in: ' + app.get('env') + ' mode')
