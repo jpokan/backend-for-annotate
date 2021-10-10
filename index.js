@@ -4,6 +4,9 @@ console.log('Starting server in: ' + app.get('env') + ' mode')
 
 if (app.get('env') === 'development') {
 	require('dotenv').config()
+} else {
+	// trust first proxy is required if server is behind a proxy server
+	app.set('trust proxy', 1) // true in production
 }
 
 const session = require('express-session')

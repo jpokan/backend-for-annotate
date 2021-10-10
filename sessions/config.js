@@ -19,8 +19,6 @@ let session_config = {
 
 // GLOBAL PRODUCTION SETTINGS
 if (process.env.NODE_ENV === 'production') {
-	// trust first proxy is required if server is behind a proxy server
-	this.set('trust proxy', 1)
 	// Cookies in production needs to be sent with these options
 	session_config.cookie.sameSite = 'none' // Because cookies are sent to a different domains or site
 	session_config.cookie.secure = true // Because cookies must be sent with HTTPS
