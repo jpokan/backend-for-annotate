@@ -1,4 +1,5 @@
 const app = require('express')()
+// Use dotenv in development only
 if (app.get('env') === 'development') {
 	require('dotenv').config()
 } else {
@@ -26,7 +27,6 @@ app.get('/', (req, res) => {
 
 // Notion Auth routes
 const notionAuth = require('./auth/notion/routes')
-const e = require('express')
 app.use('/auth/notion', notionAuth)
 
 const port = process.env.PORT || 5000
