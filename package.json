@@ -19,7 +19,7 @@
 		"qs": "^6.10.1"
 	},
 	"engines": {
-		"node": "14.17.6"
+		"node": "14.18.1"
 	},
 	"devDependencies": {
 		"dotenv": "^10.0.0",
