@@ -7,7 +7,7 @@ let session_config = {
 	store: store,
 	cookie: {
 		path: '/auth/notion',
-		maxAge: 1 * 30 * 60 * 1000,
+		maxAge: 36 * 60 * 60 * 1000,
 		//    hrs * min * sec * ms
 		httpOnly: true,
 		sameSite: '',
