@@ -3,6 +3,14 @@ const router = express.Router()
 const getAccessToken = require('./get-access-token')
 const frontendURL = process.env.FRONTEND_URL
 
+const corsHeaders = (req, res, next) => {
+	res.set('Access-Control-Allow-Origin', frontendURL)
+	res.set('Access-Control-Allow-Credentials', true)
+	res.set('Access-Control-Allow-Headers', 'Accept')
+	next()
+}
+router.use(corsHeaders)
+
 /**
  * Notion Public Integration Routes
  */
@@ -22,9 +30,6 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/session/status', async (req, res) => {
-	res.set('Access-Control-Allow-Origin', frontendURL)
-	res.set('Access-Control-Allow-Credentials', true)
-	res.set('Access-Control-Allow-Headers', 'Accept')
 	// if session with access token exist, connection status online is true
 	if (req.session.token) {
 		const response = {
@@ -42,10 +47,6 @@ router.get('/session/status', async (req, res) => {
 })
 
 router.post('/session/disconnect', async (req, res) => {
-	res.set('Access-Control-Allow-Origin', frontendURL)
-	res.set('Access-Control-Allow-Credentials', true)
-	res.set('Access-Control-Allow-Headers', 'Accept')
-
 	req.session.cookie.maxAge = 1
 	req.session.touch()
 	const response = {
