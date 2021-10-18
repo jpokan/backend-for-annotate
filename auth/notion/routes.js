@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
 			req.session.token = result
 		}
 		res.redirect(frontendURL)
-	} catch (error) {
+	} catch {
 		res.redirect(frontendURL)
 	}
 })
@@ -32,14 +32,10 @@ router.get('/', async (req, res) => {
 router.get('/session/status', async (req, res) => {
 	// if session with access token exist, connection status online is true
 	if (req.session.token) {
-		const response = {
-			id: req.sessionID,
-			online: true
-		}
-		res.json(response)
+		console.log('Connection OK')
+		res.json({ online: true })
 	} else {
 		res.status(403).json({
-			id: req.sessionID,
 			online: false,
 			error_message: 'Not connected'
 		})
@@ -47,14 +43,28 @@ router.get('/session/status', async (req, res) => {
 })
 
 router.post('/session/disconnect', async (req, res) => {
-	req.session.cookie.maxAge = 1
-	req.session.touch()
-	const response = {
-		id: req.sessionID,
-		online: false
-	}
+	req.session.destroy()
 	console.log('Session was terminated.')
-	res.json(response)
+	res.json({ online: false })
+})
+
+const search = require('./search')
+const queryDatabase = require('./query-database')
+router.get('/search', async (req, res) => {
+	try {
+		const secret = req.session.token.access_token
+		const databases = await search('review', secret)
+		const data = await Promise.all(
+			databases.results.map(async (database) => {
+				return { table: database, ...(await queryDatabase(database.id, secret)) }
+			})
+		)
+		res.json({ data: data })
+	} catch {
+		res.status(403).json({
+			error_message: 'Query failed.'
+		})
+	}
 })
 
 module.exports = router
