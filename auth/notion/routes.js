@@ -53,7 +53,7 @@ const queryDatabase = require('./query-database')
 router.get('/search', async (req, res) => {
 	try {
 		const secret = req.session.token.access_token
-		const databases = await search('[review]', secret)
+		const databases = await search('<review>', secret)
 		const data = await Promise.all(
 			databases.results.map(async (database) => {
 				return { table: database, ...(await queryDatabase(database.id, secret)) }
